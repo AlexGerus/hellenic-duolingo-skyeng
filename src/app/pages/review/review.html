@@ -1,0 +1,11 @@
+@if (current(); as ex) {
+  <div class="card">
+    <h2 style="margin:0 0 12px;">Повторение (SRS)</h2>
+    <exercise-renderer [exercise]="ex" (answered)="onAnswer($event)"/>
+  </div>
+} @else {
+  <div class="card">
+    <h2>Пока нечего повторять</h2>
+    <p>Завершите уроки или зайдите позже.</p>
+  </div>
+}

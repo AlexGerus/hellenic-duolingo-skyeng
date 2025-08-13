@@ -1,15 +1,15 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', loadComponent: () => import('./pages/dashboard.page').then(m => m.DashboardPageComponent) },
-  { path: 'login', loadComponent: () => import('./pages/login.page').then(m => m.LoginPageComponent) },
-  { path: 'lesson/:id', loadComponent: () => import('./pages/lesson.page').then(m => m.LessonPageComponent) },
-  { path: 'lesson/:id/rules', loadComponent: () => import('./pages/rules.page').then(m => m.RulesPageComponent) },
-  { path: 'review', loadComponent: () => import('./pages/review.page').then(m => m.ReviewPageComponent) },
-  { path: 'admin', loadComponent: () => import('./pages/admin.page').then(m => m.AdminPageComponent) },
+  { path: '', loadComponent: () => import('./pages/dashboard/dashboard').then(m => m.DashboardPage) },
+  { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.LoginPage) },
+  { path: 'lesson/:id', loadComponent: () => import('./pages/lesson/lesson').then(m => m.LessonPage) },
+  { path: 'lesson/:id/rules', loadComponent: () => import('./pages/rules/rules').then(m => m.RulesPage) },
+  { path: 'review', loadComponent: () => import('./pages/review/review').then(m => m.ReviewPage) },
+  { path: 'admin', loadComponent: () => import('./pages/admin/admin').then(m => m.AdminPage) },
   {
     path: 'leaderboard',
-    loadComponent: () => import('./pages/leaderboard.page').then(m => m.LeaderboardPageComponent)
+    loadComponent: () => import('./pages/leaderboard/leaderboard').then(m => m.LeaderboardPage)
   },
   { path: '**', redirectTo: '' }
 ];

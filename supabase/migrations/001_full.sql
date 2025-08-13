@@ -347,14 +347,21 @@ not found then insert into user_progress(user_id, daily_goal) values(p_user_id, 
 end if;
 end; $$;
 
-create
-or replace function get_leaderboard_week(p_limit int default 20)
-returns table(rank int, name text, xp int) language plpgsql as $$
-declare
+CREATE OR REPLACE FUNCTION get_leaderboard_week(p_limit int DEFAULT 20)
+RETURNS TABLE(rank int, name text, xp int)
+LANGUAGE plpgsql AS $$
+DECLARE
 wk date := date_trunc('week', now())::date;
-begin
-return query select row_number() over (order by l.xp desc) as rank,
-    coalesce(p.username, left(l.user_id::text,8)) as name, l.xp
-    from leaderboard l left join profiles p on p.id = l.user_id
-    where l.week_start = wk order by l.xp desc limit p_limit;
-end; $$;
+BEGIN
+RETURN QUERY
+SELECT
+  row_number() OVER (ORDER BY l.xp DESC)::int AS rank, -- Cast to int
+  COALESCE(p.username, left(l.user_id::text, 8)) AS name,
+  l.xp
+FROM leaderboard l
+       LEFT JOIN profiles p ON p.id = l.user_id
+WHERE l.week_start = wk
+ORDER BY l.xp DESC
+  LIMIT p_limit;
+END;
+$$;

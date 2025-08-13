@@ -4,9 +4,9 @@ import { Exercise } from '../../shared/models';
 @Component({
   selector: 'exercise-renderer',
   imports: [],
-  templateUrl: './exercise-renderer.component.html',
+  templateUrl: './exercise-renderer.html',
 })
-export class ExerciseRendererComponent {
+export class ExerciseRenderer {
   exercise = input.required<Exercise>();
   answered = output<{ correct: boolean; answer: string }>();
   picked: string[] = [];

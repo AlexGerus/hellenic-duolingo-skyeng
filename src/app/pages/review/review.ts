@@ -1,26 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
-import { DataApiService } from '../../shared/services';
-import { ExerciseRendererComponent } from '../widgets/exercise-renderer.component';
+import { DataApiService } from '../../../shared/services';
+import { ExerciseRenderer } from '../../widgets/exercise-renderer';
 
 @Component({
-  standalone: true,
   selector: 'page-review',
-  imports: [ExerciseRendererComponent],
-  template: `
-    @if (current(); as ex) {
-      <div class="card">
-        <h2 style="margin:0 0 12px;">Повторение (SRS)</h2>
-        <exercise-renderer [exercise]="ex" (answered)="onAnswer($event)"/>
-      </div>
-    } @else {
-      <div class="card">
-        <h2>Пока нечего повторять</h2>
-        <p>Завершите уроки или зайдите позже.</p>
-      </div>
-    }
-  `
+  imports: [ExerciseRenderer],
+  templateUrl: './review.html'
 })
-export class ReviewPageComponent {
+export class ReviewPage {
   private api = inject(DataApiService);
   queue = signal<any[]>([]);
   idx = signal(0);

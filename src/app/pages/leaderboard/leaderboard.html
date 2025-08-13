@@ -1,0 +1,6 @@
+<div class="card">
+  <h2 style="margin-top:0;">Лидерборд (эта неделя)</h2>
+  @for (r of rows(); track [$index, r.rank]) {
+    <div>{{ r.rank }}. {{ r.name }} — {{ r.xp }} XP</div>
+  }
+</div>

@@ -1,0 +1,18 @@
+@if (current(); as ex) {
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2 style="margin:0;">Урок: {{ lessonTitle }}</h2>
+      <div class="row">
+        <a class="badge" [routerLink]="['/lesson', lessonId(), 'rules']">Правила</a>
+        <div class="badge">{{ index() + 1 }} / {{ total() }}</div>
+      </div>
+    </div>
+    <exercise-renderer [exercise]="ex" (answered)="onAnswer($event)"/>
+  </div>
+}
+@if (done()) {
+  <div class="card">
+    <h2>Готово!</h2>
+    <p>Отличная работа. Переходите к повторению, чтобы закрепить материал.</p>
+  </div>
+}
