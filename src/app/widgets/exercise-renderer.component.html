@@ -1,0 +1,116 @@
+@if (exercise(); as exercise) {
+  <div>
+    <div style="margin-bottom:12px;">
+      <span class="badge">{{ exercise.type }}</span>
+    </div>
+
+    @if (exercise.type === 'flashcard') {
+      <div>
+        <div style="font-size:32px; font-weight:800; margin-bottom:8px;">{{ exercise.prompt }}</div>
+        <button class="primary" (click)="emit(true, '[known]')">Знаю</button>
+        <button class="ghost" (click)="emit(false, '[unsure]')">Пока нет</button>
+      </div>
+    }
+
+    @if (exercise.type === 'mcq') {
+      <div>
+        <div style="font-size:20px; margin-bottom:12px;">{{ exercise.prompt }}</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          @for (c of exercise.choices; track $index) {
+            <button class="ghost" (click)="emit(c === exercise.answer, c)">
+              {{ c }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    @if (exercise.type === 'typing') {
+      <div>
+        <div style="font-size:20px; margin-bottom:12px;">{{ exercise.prompt }}</div>
+        <input #t
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
+        <div style="margin-top:8px;">
+          <button class="primary" (click)="emit(norm(t.value)===norm(exercise.answer), t.value)">Проверить</button>
+        </div>
+      </div>
+    }
+
+    @if (exercise.type === 'listen') {
+
+      <div>
+        <div style="margin-bottom:8px;">Прослушайте и выберите перевод</div>
+        @if (exercise.meta?.audio) {
+          <audio controls [src]="exercise.meta.audio"></audio>
+        } @else {
+          <div style="opacity:.8; margin-bottom:8px;">
+            {{ exercise.prompt }}
+          </div>
+        }
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          @for (c of exercise.choices; track $index) {
+            <button class="ghost" (click)="emit(c === exercise.answer, c)">{{ c }}</button>
+          }
+        </div>
+      </div>
+    }
+
+    @if (exercise.type === 'reorder') {
+
+      <div>
+        <div style="font-size:20px; margin-bottom:8px;">Соберите фразу</div>
+        <div class="row" style="margin-bottom:8px; min-height:40px;">
+          @for (t of picked; track $index) {
+            <span class="badge">{{ t }}</span>
+          }
+        </div>
+        <div class="row">
+          @for (t of pool; track $index) {
+            <button class="ghost" (click)="pick(t)">{{ t }}</button>
+          }
+        </div>
+        <div style="margin-top:8px;">
+          <button class="primary" (click)="check()">Проверить</button>
+          <button class="ghost" (click)="resetReorder()">Сброс</button>
+        </div>
+      </div>
+    }
+
+    @if (exercise.type === 'ru2el') {
+      <div>
+        <div style="font-size:20px; margin-bottom:12px;">Переведите на греческий: {{ exercise.prompt }}</div>
+        <input #r2
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
+        <div style="margin-top:8px;">
+          <button class="primary" (click)="emit(norm(r2.value)===norm(exercise.answer), r2.value)">Проверить
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (exercise.type === 'article') {
+      <div>
+        <div style="font-size:20px; margin-bottom:12px;">Выберите артикль: <b>{{ exercise.prompt }}</b></div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          @for (a of (exercise.choices || ['ο', 'η', 'το', 'ένας', 'μία', 'ένα']); track $index) {
+            <button class="ghost" (click)="emit(a===exercise.answer, a)">{{ a }}</button>
+          }
+        </div>
+      </div>
+    }
+
+    @if (exercise.type === 'forms') {
+      <div>
+        <div style="font-size:18px; margin-bottom:6px;">Дайте форму: <b>{{ exercise.meta?.lemma }}</b>
+          — {{ exercise.meta?.feature }}
+        </div>
+        <input #f
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
+        <div style="margin-top:8px;">
+          <button class="primary" (click)="checkForms(f.value)">Проверить</button>
+          <div style="opacity:.8; font-size:12px; margin-top:6px;">Проверьте ударение (ά έ ή ί ό ύ ώ)</div>
+        </div>
+      </div>
+    }
+  </div>
+}
