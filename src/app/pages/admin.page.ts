@@ -30,7 +30,7 @@ export class AdminPageComponent {
   }
 
   async importFull() {
-    const res = await fetch('/assets/seed/greek-a0-a2.json');
+    const res = await fetch('assets/seed/greek-a0-a2.json');
     const json = await res.json();
     await this.api.importContent(json);
     alert('Импорт завершён');
