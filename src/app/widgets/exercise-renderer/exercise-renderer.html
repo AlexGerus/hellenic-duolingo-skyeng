@@ -30,6 +30,8 @@
         <div style="font-size:20px; margin-bottom:12px;">{{ exercise.prompt }}</div>
         <input #t
                style="width:100%; padding:10px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
+        <!-- виртуальная клавиатура для греческих букв -->
+        <greek-keyboard (key)="t.value = (t.value || '') + $event"></greek-keyboard>
         <div style="margin-top:8px;">
           <button class="primary" (click)="emit(norm(t.value)===norm(exercise.answer), t.value)">Проверить</button>
         </div>
@@ -81,6 +83,8 @@
         <div style="font-size:20px; margin-bottom:12px;">Переведите на греческий: {{ exercise.prompt }}</div>
         <input #r2
                style="width:100%; padding:10px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
+        <!-- виртуальная клавиатура для греческих букв -->
+        <greek-keyboard (key)="r2.value = (r2.value || '') + $event"></greek-keyboard>
         <div style="margin-top:8px;">
           <button class="primary" (click)="emit(norm(r2.value)===norm(exercise.answer), r2.value)">Проверить
           </button>
@@ -106,9 +110,31 @@
         </div>
         <input #f
                style="width:100%; padding:10px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
+        <!-- виртуальная клавиатура для греческих букв -->
+        <greek-keyboard (key)="f.value = (f.value || '') + $event"></greek-keyboard>
         <div style="margin-top:8px;">
           <button class="primary" (click)="checkForms(f.value)">Проверить</button>
           <div style="opacity:.8; font-size:12px; margin-top:6px;">Проверьте ударение (ά έ ή ί ό ύ ώ)</div>
+        </div>
+      </div>
+    }
+
+    @if (exercise.type === 'spell') {
+      <div>
+        <div style="font-size:20px; margin-bottom:8px;">Соберите слово</div>
+        <div class="row" style="margin-bottom:8px; min-height:40px;">
+          @for (t of picked; track $index) {
+            <span class="badge">{{ t }}</span>
+          }
+        </div>
+        <div class="row">
+          @for (t of pool; track $index) {
+            <button class="ghost" (click)="pick(t)">{{ t }}</button>
+          }
+        </div>
+        <div style="margin-top:8px;">
+          <button class="primary" (click)="checkSpell()">Проверить</button>
+          <button class="ghost" (click)="resetSpell()">Сброс</button>
         </div>
       </div>
     }

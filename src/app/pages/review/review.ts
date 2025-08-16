@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
-import { DataApiService } from '../../../shared/services';
-import { ExerciseRenderer } from '../../widgets/exercise-renderer';
+import { DataApiService, ToastService } from '../../../shared/services';
+import { ExerciseRenderer } from '../../widgets/exercise-renderer/exercise-renderer';
 
 @Component({
   selector: 'page-review',
@@ -9,6 +9,7 @@ import { ExerciseRenderer } from '../../widgets/exercise-renderer';
 })
 export class ReviewPage {
   private api = inject(DataApiService);
+  private toast = inject(ToastService);
   queue = signal<any[]>([]);
   idx = signal(0);
 
@@ -28,7 +29,14 @@ export class ReviewPage {
 
   async onAnswer(res: { correct: boolean; answer: string }) {
     const ex = this.current();
-    await this.api.submitReview(ex.id, res.answer, res.correct);
+    const expected = ex?.answer;
+    if (res.correct) this.toast.show('Правильно!');
+    else this.toast.show(`Неверно. Правильный ответ: ${expected}`);
+    try {
+      await this.api.submitReview(ex.id, res.answer, res.correct);
+    } catch (err: any) {
+      this.toast.show(err?.message || 'Ошибка отправки ответа');
+    }
     if (this.idx() + 1 >= this.queue().length) this.queue.set([]);
     else this.idx.update(v => v + 1);
   }

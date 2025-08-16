@@ -119,4 +119,23 @@ export class DataApiService {
     const { data } = await this.client.rpc('get_leaderboard_week', { p_limit: limit });
     return data || [];
   }
+
+  async getProfile(): Promise<any | null> {
+    const uid = (await this.client.auth.getUser()).data.user?.id;
+    if (!uid) return null;
+    const { data } = await this.client
+      .from('profiles')
+      .select('*')
+      .eq('id', uid)
+      .single();
+    return data || null;
+  }
+
+  async upsertProfile(username: string, role: string | null = null): Promise<void> {
+    const user = (await this.client.auth.getUser()).data.user;
+    if (!user) return;
+    const payload: any = { id: user.id, username };
+    if (role) payload.role = role;
+    await this.client.from('profiles').upsert(payload, { onConflict: 'id' });
+  }
 }

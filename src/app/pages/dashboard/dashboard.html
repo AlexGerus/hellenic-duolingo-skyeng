@@ -13,7 +13,9 @@
     <div class="row" style="margin-top:8px;">
       <input type="number" min="10" step="10" [formControl]="dailyGoal"
              style="width:100px; padding:6px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
-      <button class="ghost" (click)="saveGoal()">Сохранить цель</button>
+      <button class="ghost" (click)="saveGoal()" [disabled]="savingGoal()">
+        @if (savingGoal()) { Сохранение... } @else { Сохранить цель }
+      </button>
     </div>
   </div>
 </div>

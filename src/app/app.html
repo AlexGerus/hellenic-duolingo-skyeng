@@ -5,11 +5,19 @@
       <span class="badge">A0–A2</span>
     </a>
     <nav class="row">
-      <a routerLink="/review">Повторение</a>
-      <a routerLink="/leaderboard">Лидерборд</a>
-      <a routerLink="/admin">Админ</a>
-      <a routerLink="/login">Войти</a>
+      @if (auth.ready()) {
+        @if (auth.isLoggedIn()) {
+          <a routerLink="/review">Повторение</a>
+          <a routerLink="/leaderboard">Лидерборд</a>
+
+          @if (auth.isAdmin()) {
+            <a routerLink="/admin">Админ</a>
+          }
+          <a class="pointer" (click)="supa.signOut()">Выйти</a>
+        }
+      }
     </nav>
   </header>
   <router-outlet/>
+  <toast-container/>
 </div>

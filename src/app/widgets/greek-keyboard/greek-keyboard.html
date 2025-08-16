@@ -1,0 +1,5 @@
+<div style="display:flex; flex-wrap:wrap; gap:4px; justify-content:center; margin-top:8px;">
+  @for (ch of letters; track $index) {
+    <button class="ghost" type="button" (click)="press(ch)">{{ ch }}</button>
+  }
+</div>

@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DataApiService } from '../../../shared/services';
-import { ExerciseRenderer } from '../../widgets/exercise-renderer';
+import { DataApiService, ToastService } from '../../../shared/services';
+import { ExerciseRenderer } from '../../widgets/exercise-renderer/exercise-renderer';
 
 @Component({
   selector: 'page-lesson',
@@ -11,6 +11,7 @@ import { ExerciseRenderer } from '../../widgets/exercise-renderer';
 export class LessonPage {
   private route = inject(ActivatedRoute);
   private api = inject(DataApiService);
+  private toast = inject(ToastService);
   lessonId = signal<string>('');
   lessonTitle = '';
   exercises = signal<any[]>([]);
@@ -36,7 +37,17 @@ export class LessonPage {
 
   async onAnswer(res: { correct: boolean; answer: string }) {
     const ex = this.current();
-    await this.api.submitAnswer(ex.id, res.answer, res.correct);
+    const expected = ex?.answer;
+    if (res.correct) {
+      this.toast.show('Правильно!');
+    } else {
+      this.toast.show(`Неверно. Правильный ответ: ${expected}`);
+    }
+    try {
+      await this.api.submitAnswer(ex.id, res.answer, res.correct);
+    } catch (err: any) {
+      this.toast.show(err?.message || 'Ошибка отправки ответа');
+    }
     if (this.index() + 1 >= this.total()) this.done.set(true);
     else this.index.update(v => v + 1);
   }

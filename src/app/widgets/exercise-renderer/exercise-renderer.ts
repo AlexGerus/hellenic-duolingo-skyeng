@@ -1,9 +1,12 @@
 import { Component, effect, input, output } from '@angular/core';
-import { Exercise } from '../../shared/models';
+import { Exercise } from '../../../shared/models';
+import { GreekKeyboard } from '../greek-keyboard/greek-keyboard';
 
 @Component({
   selector: 'exercise-renderer',
-  imports: [],
+  imports: [
+    GreekKeyboard
+  ],
   templateUrl: './exercise-renderer.html',
 })
 export class ExerciseRenderer {
@@ -12,6 +15,11 @@ export class ExerciseRenderer {
   picked: string[] = [];
   pool: string[] = [];
 
+  readonly greekLetters = [
+    'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'ς', 'τ', 'υ', 'φ', 'χ', 'ψ', 'ω',
+    'ά', 'έ', 'ή', 'ί', 'ό', 'ύ', 'ώ', 'ϊ', 'ΐ', 'ϋ', 'ΰ'
+  ];
+
   constructor() {
     effect(() => {
       const { type } = this.exercise();
@@ -19,6 +27,9 @@ export class ExerciseRenderer {
         const tokens = (this.exercise().choices || []).slice();
         this.pool = this.shuffle(tokens);
         this.picked = [];
+      }
+      if (type === 'spell') {
+        this.resetSpell();
       }
     });
   }
@@ -35,6 +46,21 @@ export class ExerciseRenderer {
     const ans = this.picked.join(' ').trim();
     const correct = this.norm(ans) === this.norm(this.exercise().answer);
     this.answered.emit({ correct, answer: ans });
+  }
+
+  checkSpell() {
+    const ans = this.picked.join('');
+    const correct = this.norm(ans) === this.norm(this.exercise().answer);
+    this.answered.emit({ correct, answer: ans });
+  }
+
+  resetSpell() {
+    const { choices } = this.exercise();
+    const chars = (choices && choices.length > 0)
+      ? (choices || []).slice()
+      : (this.exercise().answer || '').split('');
+    this.pool = this.shuffle(chars);
+    this.picked = [];
   }
 
   resetReorder() {

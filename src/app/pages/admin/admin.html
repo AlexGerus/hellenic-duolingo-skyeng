@@ -1,9 +1,15 @@
 <div class="card">
   <h2 style="margin-top:0;">Админ: контент и сиды</h2>
   <div class="row" style="margin-bottom:12px;">
-    <button class="ghost" (click)="seed()">Загрузить мини-демо (A0–A2)</button>
-    <button class="primary" (click)="importFull()">Импорт полного курса (A0–A2)</button>
-    <button class="ghost" (click)="reset()">Сбросить курс (el)</button>
+    <button class="ghost" (click)="seed()" [disabled]="loadingSeed()">
+      @if (loadingSeed()) { Загрузка... } @else { Загрузить мини-демо (A0–A2) }
+    </button>
+    <button class="primary" (click)="importFull()" [disabled]="loadingImport()">
+      @if (loadingImport()) { Импорт... } @else { Импорт полного курса (A0–A2) }
+    </button>
+    <button class="ghost" (click)="reset()" [disabled]="loadingReset()">
+      @if (loadingReset()) { Сброс... } @else { Сбросить курс (el) }
+    </button>
   </div>
   <p>Импорт читает <code>assets/seed/greek-a0-a2.json</code> и заливает в Supabase.</p>
 </div>

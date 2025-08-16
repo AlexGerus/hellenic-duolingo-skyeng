@@ -1,13 +1,25 @@
 <div class="card" style="max-width:520px; margin:40px auto;">
-  <h2 style="margin-top:0;">Вход по email</h2>
-  <p>Мы отправим волшебную ссылку для входа.</p>
-  <form (ngSubmit)="send()" style="display:flex; gap:8px;">
-    <input [formControl]="email" name="email" type="email"
-           placeholder="you@example.com"
-           style="flex:1; padding:10px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
-    <button class="primary" type="submit">Отправить ссылку</button>
+  <h2 style="margin-top:0;">{{ isSignUp() ? 'Регистрация' : 'Вход' }}</h2>
+  <!-- Форма авторизации/регистрации. В режиме регистрации добавляется поле
+       имени пользователя. Кнопка блокируется во время отправки. -->
+  <form (ngSubmit)="submit()" style="display:flex; flex-direction:column; gap:8px;">
+    <input [formControl]="email" type="email" placeholder="Email"
+           style="padding:10px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
+    <input [formControl]="password" type="password" placeholder="Пароль"
+           style="padding:10px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
+    @if (isSignUp()) {
+      <input [formControl]="username" type="text" placeholder="Имя пользователя"
+             style="padding:10px; border-radius:8px; border:1px solid #334155; background:#0b1220; color:#e2e8f0;">
+    }
+    <button class="primary" type="submit" [disabled]="loading()">
+      {{ isSignUp() ? 'Зарегистрироваться' : 'Войти' }}
+    </button>
   </form>
-  @if (sent()) {
-    <p>Проверьте почту. Ссылка действует 60 минут.</p>
-  }
+  <p style="text-align:center; margin-top:8px;">
+    @if (isSignUp()) {
+      Уже есть аккаунт? <a href="" (click)="toggle(); $event.preventDefault()">Войти</a>
+    } @else {
+      Нет аккаунта? <a href="" (click)="toggle(); $event.preventDefault()">Регистрация</a>
+    }
+  </p>
 </div>
